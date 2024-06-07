@@ -24,6 +24,5 @@ erl_crash.dump
 *.code-workspace
 *.session.sql
 .elixir_ls/*
-.tool-versions
 
 /zignore
