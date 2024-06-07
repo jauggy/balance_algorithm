@@ -18,7 +18,8 @@ defmodule Teiserver.Account do
     %{}
   end
 
-  def get_rating(user_id, rating_type_id) when is_integer(user_id) and is_integer(rating_type_id) do
+  def get_rating(user_id, rating_type_id)
+      when is_integer(user_id) and is_integer(rating_type_id) do
     %{}
   end
 
@@ -59,10 +60,10 @@ defmodule Central.Helpers.NumberHelper do
     dp_mult = :math.pow(10, decimal_places)
     round(value * dp_mult) / dp_mult
   end
+end
 
-  defmodule Teiserver.Config do
-    def get_site_config_cache("teiserver.Max deviation") do
-      10
-    end
+defmodule Teiserver.Config do
+  def get_site_config_cache("teiserver.Max deviation") do
+    10
   end
 end
