@@ -59,4 +59,10 @@ defmodule Central.Helpers.NumberHelper do
     dp_mult = :math.pow(10, decimal_places)
     round(value * dp_mult) / dp_mult
   end
+
+  defmodule Teiserver.Config do
+    def get_site_config_cache("teiserver.Max deviation") do
+      10
+    end
+  end
 end
