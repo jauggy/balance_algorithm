@@ -26,6 +26,10 @@ defmodule Teiserver.Account do
   def get_user_stat_data(_userid) do
     %{}
   end
+
+  def get_user_by_id(_userid) do
+    %{}
+  end
 end
 
 defmodule Teiserver.Game.MatchRatingLib do

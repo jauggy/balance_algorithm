@@ -164,7 +164,8 @@ defmodule Teiserver.Battle.BalanceLib do
 
   # Only take keys we need
   defp clean_groups(groups) do
-    groups |> Enum.map(fn x->
+    groups
+    |> Enum.map(fn x ->
       Map.take(x, ~w(members count group_rating ratings)a)
     end)
   end
@@ -179,7 +180,7 @@ defmodule Teiserver.Battle.BalanceLib do
         true ->
           balance_result.teams
           |> Map.new(fn {team_id, groups} ->
-            {team_id, Enum.reverse(clean_groups((groups)))}
+            {team_id, Enum.reverse(clean_groups(groups))}
           end)
       end
 
@@ -541,7 +542,6 @@ defmodule Teiserver.Battle.BalanceLib do
     get_user_rating_value(userid, rating_type_id)
   end
 
-
   # Used to get the rating value of the user for internal balance purposes which might be
   # different from public/reporting
   @spec get_user_balance_rating_value(T.userid(), String.t() | non_neg_integer()) ::
@@ -810,5 +810,31 @@ defmodule Teiserver.Battle.BalanceLib do
     else
       for(y <- make_combinations(n - x.count, xs), do: [x | y]) ++ make_combinations(n, xs)
     end
+  end
+
+  @doc """
+  Can be called within balancer_server to detect if a balance result has parties
+  If the result has no parties we do not need to check team deviation
+  """
+  def balanced_teams_have_parties?(team_groups) do
+    Enum.reduce_while(team_groups, false, fn {_key, team}, _acc ->
+      case team_has_parties?(team) do
+        true -> {:halt, true}
+        false -> {:cont, false}
+      end
+    end)
+  end
+
+  @spec team_has_parties?([BT.group()]) :: boolean()
+  def team_has_parties?(team) do
+    Enum.reduce_while(team, false, fn x, _acc ->
+      group_count = x[:count]
+
+      if group_count > 1 do
+        {:halt, true}
+      else
+        {:cont, false}
+      end
+    end)
   end
 end
