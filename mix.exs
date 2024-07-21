@@ -24,7 +24,7 @@ defmodule BalanceAlgorithm.MixProject do
       {:con_cache, "~> 1.0"},
       {:dialyxir, "~> 1.1", only: [:dev], runtime: false},
       {:statistics, "~> 0.6.2"},
-      {:openskill, git: "git@github.com:Teifion/openskill.ex.git", branch: "master"},
+      {:openskill, git: "https://github.com/StanczakDominik/openskill.ex.git", branch: "master"},
       {:decimal, "~> 2.0"}
     ]
   end
