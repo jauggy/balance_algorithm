@@ -16,6 +16,14 @@ defmodule Teiserver.Battle.BruteForceInternalTest do
     assert length(combos) == 462
   end
 
+  test "combinations helper module odd players" do
+    combos = CombinationsHelper.get_combinations(3)
+    assert combos == [[0], [1], [2]]
+
+    combos = CombinationsHelper.get_combinations(13)
+    assert length(combos) == 1716
+  end
+
   test "check for broken party" do
     party = ["kyutoryu", "fbots1998"]
 
