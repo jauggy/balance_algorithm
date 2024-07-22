@@ -198,7 +198,7 @@ defmodule Teiserver.Battle.LoserPicksBalanceTest do
                1 => 13,
                2 => 13
              },
-            #The captain should be the user with the highest rating on each team
+             # The captain should be the user with the highest rating on each team
              captains: %{
                1 => 1,
                2 => 3
@@ -322,17 +322,17 @@ defmodule Teiserver.Battle.LoserPicksBalanceTest do
                  %{count: 1, group_rating: 8, members: [116], ratings: [8]}
                ],
                2 => [
-                 %{count: 1, group_rating: 35, members: [104], ratings: '#'},
+                 %{count: 1, group_rating: 35, members: [104], ratings: ~c"#"},
                  %{count: 1, group_rating: 34, members: [105], ratings: [34]},
                  %{count: 1, group_rating: 28, members: [107], ratings: [28]},
                  %{count: 1, group_rating: 26, members: [109], ratings: [26]},
                  %{count: 1, group_rating: 21, members: [111], ratings: [21]},
                  %{count: 1, group_rating: 16, members: [113], ratings: [16]},
                  %{count: 1, group_rating: 14, members: [115], ratings: [14]},
-                 %{count: 1, group_rating: 10, members: [103], ratings: '\n'}
+                 %{count: 1, group_rating: 10, members: [103], ratings: ~c"\n"}
                ]
              },
-             team_players: %{1 => 'ejlnprft', 2 => 'hikmoqsg'},
+             team_players: %{1 => ~c"ejlnprft", 2 => ~c"hikmoqsg"},
              team_sizes: %{1 => 8, 2 => 8},
              means: %{1 => 23.0, 2 => 23.0},
              stdevs: %{1 => 12.816005617976296, 2 => 8.674675786448736}
@@ -366,7 +366,7 @@ defmodule Teiserver.Battle.LoserPicksBalanceTest do
       )
 
     assert Map.drop(result, [:logs, :time_taken]) == %{
-      #The captain should be the user with the highest rating on each team
+             # The captain should be the user with the highest rating on each team
              captains: %{1 => 104, 2 => 101},
              deviation: 2,
              ratings: %{1 => 248, 2 => 253},
