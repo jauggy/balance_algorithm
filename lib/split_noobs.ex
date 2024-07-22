@@ -74,25 +74,34 @@ defmodule Teiserver.Battle.Balance.SplitNoobs do
     noob_log =
       cond do
         length(state.noobs) > 0 ->
-          noobs_string = Enum.map(state.noobs, fn x -> x.name end) |> Enum.join(", ")
+          noobs_string =
+            Enum.map(state.noobs, fn x ->
+              chev = Map.get(x, :rank, 0) + 1
+              "#{x.name} (chev: #{chev}, σ: #{x.uncertainty})"
+            end)
 
-          "#{noobs_string}. (Players not in parties and have either high uncertainty or 0 rating.)"
+          [
+            "Solo Noobs: (Players not in parties and have either high uncertainty or 0 rating.)",
+            noobs_string
+          ]
 
         true ->
-          "None"
+          "Solo Noobs: None"
       end
 
-    logs = [
-      "Algorithm: split_noobs",
-      @splitter,
-      "Parties: #{log_parties(parties)}",
-      "Solo Noobs: #{noob_log}",
-      "Team rating diff penalty: #{format(result.rating_diff_penalty)}",
-      "Broken party penalty: #{result.broken_party_penalty}",
-      "Score: #{format(result.score)} (lower is better)",
-      "Team 1: #{log_team(first_team)}",
-      "Team 2: #{log_team(second_team)}"
-    ]
+    logs =
+      [
+        "Algorithm: split_noobs",
+        @splitter,
+        "Parties: #{log_parties(parties)}",
+        noob_log,
+        "Team rating diff penalty: #{format(result.rating_diff_penalty)}",
+        "Broken party penalty: #{result.broken_party_penalty}",
+        "Score: #{format(result.score)} (lower is better)",
+        "Team 1: #{log_team(first_team)}",
+        "Team 2: #{log_team(second_team)}"
+      ]
+      |> List.flatten()
 
     %{
       team_groups: team_groups,
@@ -231,14 +240,15 @@ defmodule Teiserver.Battle.Balance.SplitNoobs do
           uncertainties: uncertainties
         } <- expanded_group,
         # Zipping will create binary tuples from 2 lists
-        {id, rating, _rank, name, uncertainty} <-
+        {id, rating, rank, name, uncertainty} <-
           Enum.zip([members, ratings, ranks, names, uncertainties]),
         # Create result value
         do: %{
           rating: rating,
           name: name,
           id: id,
-          uncertainty: uncertainty
+          uncertainty: uncertainty,
+          rank: rank
         }
   end
 
