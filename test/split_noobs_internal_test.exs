@@ -396,17 +396,19 @@ defmodule Teiserver.Battle.SplitNoobsInternalTest do
 
     assert standard_result == %{
              logs: [
+              "------------------------------------------------------",
                "Algorithm: split_noobs",
                "------------------------------------------------------",
                "Parties: [kyutoryu, fbots1998]",
                "Solo Noobs: (Players not in parties and have either high uncertainty or 0 rating.)",
                "Dixinormus (chev: 3, σ: 8)",
                "HungDaddy (chev: 3, σ: 8)",
+               "------------------------------------------------------",
+               "Team 1: [DTG]BamBin0, Noody, MaTThiuS_82, fbots1998, kyutoryu, HungDaddy",
+               "Team 2: barmalev, Aposis, reddragon2010, jauggy, SLOPPYGAGGER, Dixinormus",
                "Team rating diff penalty: 0.4",
                "Broken party penalty: 0",
                "Score: 0.4 (lower is better)",
-               "Team 1: [DTG]BamBin0, Noody, MaTThiuS_82, fbots1998, kyutoryu, HungDaddy",
-               "Team 2: barmalev, Aposis, reddragon2010, jauggy, SLOPPYGAGGER, Dixinormus"
              ],
              team_groups: %{
                1 => [

@@ -91,15 +91,17 @@ defmodule Teiserver.Battle.Balance.SplitNoobs do
 
     logs =
       [
+        @splitter,
         "Algorithm: split_noobs",
         @splitter,
         "Parties: #{log_parties(parties)}",
         noob_log,
+        @splitter,
+        "Team 1: #{log_team(first_team)}",
+        "Team 2: #{log_team(second_team)}",
         "Team rating diff penalty: #{format(result.rating_diff_penalty)}",
         "Broken party penalty: #{result.broken_party_penalty}",
-        "Score: #{format(result.score)} (lower is better)",
-        "Team 1: #{log_team(first_team)}",
-        "Team 2: #{log_team(second_team)}"
+        "Score: #{format(result.score)} (lower is better)"
       ]
       |> List.flatten()
 
