@@ -33,7 +33,7 @@ defmodule Teiserver.Battle.Balance.BruteForce do
       :ok ->
         potential_teams = potential_teams(length(input_data.players))
         best_combo = get_best_combo(potential_teams, input_data.players, input_data.parties)
-        standardise_result(best_combo,  input_data.parties)
+        standardise_result(best_combo, input_data.parties)
 
       {:error, message} ->
         # Call another balancer
@@ -191,8 +191,8 @@ defmodule Teiserver.Battle.Balance.BruteForce do
     end)
   end
 
-  @spec standardise_result(BF.combo_result(),  [String.t()]) :: any()
-  def standardise_result(best_combo,  parties) do
+  @spec standardise_result(BF.combo_result(), [String.t()]) :: any()
+  def standardise_result(best_combo, parties) do
     first_team = best_combo.first_team
 
     second_team = best_combo.second_team

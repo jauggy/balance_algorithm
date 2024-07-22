@@ -17,7 +17,9 @@ defmodule Teiserver.Battle.Balance.SplitNoobs do
   alias Teiserver.Battle.Balance.SplitNoobsTypes, as: SN
   alias Teiserver.Battle.Balance.BruteForce
   import Teiserver.Helper.NumberHelper, only: [format: 1]
-
+  # If player uncertainty is greater than equal to this, that player is considered a noob
+  # Going through replays I did find a one chev with 7.17 uncertainty so that's how I came to this number
+  @high_uncertainty 7.1
   @splitter "------------------------------------------------------"
 
   @doc """
@@ -48,7 +50,7 @@ defmodule Teiserver.Battle.Balance.SplitNoobs do
   def should_use_algo(initial_state, team_count) do
     cond do
       team_count > 2 -> {:error, "Team count greater than 2."}
-      initial_state.experienced_players > 14 -> {:error, "Not enough noobs."}
+      length(initial_state.experienced_players) > 14 -> {:error, "Not enough noobs."}
       true -> :ok
     end
   end
@@ -71,15 +73,20 @@ defmodule Teiserver.Battle.Balance.SplitNoobs do
 
     noob_log =
       cond do
-        length(state.noobs) > 0 -> Enum.join(state.noobs, ", ")
-        true -> "None"
+        length(state.noobs) > 0 ->
+          noobs_string = Enum.map(state.noobs, fn x -> x.name end) |> Enum.join(", ")
+
+          "#{noobs_string}. (Players not in parties and have either high uncertainty or 0 rating.)"
+
+        true ->
+          "None"
       end
 
     logs = [
       "Algorithm: split_noobs",
       @splitter,
       "Parties: #{log_parties(parties)}",
-      "Noobs: #{noob_log}. (Noobs have high uncertainty or 0 rating.)",
+      "Solo Noobs: #{noob_log}",
       "Team rating diff penalty: #{format(result.rating_diff_penalty)}",
       "Broken party penalty: #{result.broken_party_penalty}",
       "Score: #{format(result.score)} (lower is better)",
@@ -107,6 +114,7 @@ defmodule Teiserver.Battle.Balance.SplitNoobs do
     Enum.map(team, fn x ->
       x.name
     end)
+    |> Enum.reverse()
     |> Enum.join(", ")
   end
 
@@ -145,16 +153,10 @@ defmodule Teiserver.Battle.Balance.SplitNoobs do
     }
   end
 
-  @spec get_result(SN.state()) :: any()
+  @spec get_result(SN.state()) :: SN.result()
   def get_result(state) do
     # This is the best combo with only non noobs
-    best_combo = BruteForce.get_best_combo(state.experienced_players, state.parties)
-
-    # We now need to attach the noobs via draft
-    default_acc = %{
-      first_team: best_combo.first_team,
-      second_team: best_combo.second_team
-    }
+    default_acc = BruteForce.get_best_combo(state.experienced_players, state.parties)
 
     noobs = state.noobs
 
@@ -262,11 +264,11 @@ defmodule Teiserver.Battle.Balance.SplitNoobs do
   # Noobs have high uncertainty or 0 match rating
   @spec get_noobs([SN.player()], [[String.t()]]) :: any()
   def get_noobs(players, parties) do
-    # Noobs are those with 0 rating or uncertainty greater than 7.3
+    # Noobs are those with 0 rating or high uncertainty
     noobs =
       Enum.filter(players, fn player ->
         cond do
-          player.uncertainty >= 7.3 -> true
+          player.uncertainty >= @high_uncertainty -> true
           player.rating <= 0 -> true
           true -> false
         end

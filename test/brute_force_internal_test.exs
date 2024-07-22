@@ -155,7 +155,7 @@ defmodule Teiserver.Battle.BruteForceInternalTest do
            }
 
     result =
-      BruteForce.standardise_result(best_combo, input.players, input.parties) |> Map.drop([:logs])
+      BruteForce.standardise_result(best_combo,  input.parties) |> Map.drop([:logs])
 
     assert result == %{
              team_groups: %{
